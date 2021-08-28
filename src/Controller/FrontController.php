@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -21,6 +22,7 @@ class FrontController extends AbstractController
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'name',
+                'placeholder' => 'Select country',
             ])
             ->add('city', TextType::class)
             ->add('submit', SubmitType::class, ['label' => 'Check temperature'])
