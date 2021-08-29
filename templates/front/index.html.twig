@@ -13,6 +13,8 @@
     {% if temperature is not null %}
         <p>Current temperature in {{ data.city }}, {{ data.country.name }}:</p>
         <p>{{ temperature }}&deg;C</p>
+    {% elseif error %}
+        <p>Temperature could not be checked. Please try again.</p>
     {% endif %}
 </div>
 {% endblock %}

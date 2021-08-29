@@ -22,6 +22,7 @@ class FrontController extends AbstractController
     {
         $data = null;
         $currentTemperature = null;
+        $error = false;
         $form = $this->createFormBuilder()
             ->add('country', EntityType::class, [
                 'class' => Country::class,
@@ -46,6 +47,8 @@ class FrontController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($temperature);
                 $em->flush();
+            } else {
+                $error = true;
             }
         }
 
@@ -53,6 +56,7 @@ class FrontController extends AbstractController
             'form' => $form->createView(),
             'data' => $data,
             'temperature' => $currentTemperature,
+            'error' => $error,
         ]);
     }
 }
