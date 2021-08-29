@@ -4,7 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    api_openweather_app_id: '%env(API_OPENWEATHER_APPID)%'
+    api_aerisweather_access_id: '%env(API_AERISWEATHER_ACCESSID)%'
+    api_aerisweather_secret_key: '%env(API_AERISWEATHER_SECRETKEY)%'
 services:
     # default configuration for services in *this* file
     _defaults:
