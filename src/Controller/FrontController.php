@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Country;
+use App\Entity\Temperature;
 use App\Factory\TemperatureFactory;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,7 +21,7 @@ class FrontController extends AbstractController
     public function index(Request $request): Response
     {
         $data = null;
-        $temperature = null;
+        $currentTemperature = null;
         $form = $this->createFormBuilder()
             ->add('country', EntityType::class, [
                 'class' => Country::class,
@@ -34,13 +35,24 @@ class FrontController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $temperature = TemperatureFactory::checkTemperature($data['country'], $data['city']);
+            $country = $data['country'];
+            $city = $data['city'];
+            if (null !== $currentTemperature = TemperatureFactory::checkTemperature($country, $city)) {
+                $temperature = new Temperature();
+                $temperature->setTemperature($currentTemperature);
+                $temperature->setCountry($country);
+                $temperature->setCity($city);
+                $temperature->setCreated(new \DateTime());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($temperature);
+                $em->flush();
+            }
         }
 
         return $this->render('front/index.html.twig', [
             'form' => $form->createView(),
             'data' => $data,
-            'temperature' => $temperature,
+            'temperature' => $currentTemperature,
         ]);
     }
 }
