@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FrontController!{% endblock %}
+{% block title %}Temperature checker{% endblock %}
 
 {% block body %}
 <style>
@@ -10,5 +10,9 @@
 
 <div class="example-wrapper">
     {{ form(form) }}
+    {% if temperature is not null %}
+        <p>Current temperature in {{ data.city }}, {{ data.country.name }}:</p>
+        <p>{{ temperature }}&deg;C</p>
+    {% endif %}
 </div>
 {% endblock %}
