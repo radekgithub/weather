@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CountryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +28,16 @@ class Country
      * @ORM\Column(type="string", length=3)
      */
     private $isoCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Temperature::class, mappedBy="country", orphanRemoval=true)
+     */
+    private $temperatures;
+
+    public function __construct()
+    {
+        $this->temperatures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +64,36 @@ class Country
     public function setIsoCode(string $isoCode): self
     {
         $this->isoCode = $isoCode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Temperature[]
+     */
+    public function getTemperatures(): Collection
+    {
+        return $this->temperatures;
+    }
+
+    public function addTemperature(Temperature $temperature): self
+    {
+        if (!$this->temperatures->contains($temperature)) {
+            $this->temperatures[] = $temperature;
+            $temperature->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTemperature(Temperature $temperature): self
+    {
+        if ($this->temperatures->removeElement($temperature)) {
+            // set the owning side to null (unless already changed)
+            if ($temperature->getCountry() === $this) {
+                $temperature->setCountry(null);
+            }
+        }
 
         return $this;
     }
